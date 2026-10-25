@@ -62,14 +62,14 @@
                 "data": {
                   "name": "ShootAtHub"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AgitateIntake"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
           }
         },
         {
@@ -117,12 +117,6 @@
                 "type": "wait",
                 "data": {
                   "waitTime": 4.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AgitateIntake"
                 }
               },
               {

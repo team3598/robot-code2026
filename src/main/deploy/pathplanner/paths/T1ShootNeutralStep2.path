@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.745955555555556,
-        "y": 5.812702702702702
+        "x": 7.785836298932384,
+        "y": 5.729572953736655
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.994539246669864,
-        "y": 5.839276157728094
+        "x": 8.034419990046693,
+        "y": 5.756146408762047
       },
       "isLocked": false,
       "linkedName": "t1neutralintakeend"
@@ -69,7 +69,7 @@
   "folder": "T1ShootNeutral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 88.05851360908565
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

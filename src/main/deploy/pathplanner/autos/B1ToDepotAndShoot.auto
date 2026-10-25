@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "(B1) ToDepot"
@@ -48,19 +54,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 8.0
+                  "waitTime": 20.0
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "ShootAtHub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AgitateIntake"
                 }
               }
             ]

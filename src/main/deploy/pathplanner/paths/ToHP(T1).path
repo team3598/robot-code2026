@@ -1,0 +1,63 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.704766666666667,
+        "y": 0.6790999999999996
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.313550968773815,
+        "y": 0.6209573546105582
+      },
+      "isLocked": false,
+      "linkedName": "(T2) Position Start Shoot"
+    },
+    {
+      "anchor": {
+        "x": 0.7318222222222224,
+        "y": 0.6085555555555562
+      },
+      "prevControl": {
+        "x": 0.5501145634526723,
+        "y": 0.7802597393848641
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25087719298245886,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.435087719298242,
+      "rotationDegrees": -179.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Help",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

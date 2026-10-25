@@ -73,7 +73,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeOn"
+                  "name": "AgitateIntake"
                 }
               }
             ]
@@ -92,9 +92,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "T1ShootNeutralStep3"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeDown"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "T1ShootNeutralStep3"
+                }
+              }
+            ]
           }
         },
         {
@@ -135,7 +148,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 4.0
                 }
               },
               {
@@ -147,7 +160,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeOn"
+                  "name": "AgitateIntake"
                 }
               }
             ]

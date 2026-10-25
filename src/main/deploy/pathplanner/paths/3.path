@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.042811111111112,
+        "y": 3.188466666666667
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.395533333333333,
+        "y": 3.9039888888888887
+      },
+      "isLocked": false,
+      "linkedName": "2"
+    },
+    {
+      "anchor": {
+        "x": 7.363,
+        "y": 6.362966666666666
+      },
+      "prevControl": {
+        "x": 7.826577777777777,
+        "y": 5.980011111111112
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "3"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.0,
+    "rotation": -36.41637851988607
+  },
+  "reversed": false,
+  "folder": "T1ToNeutralDisturbShoot",
+  "idealStartingState": {
+    "velocity": 2.0,
+    "rotation": -64.612
+  },
+  "useDefaultConstraints": false
+}

@@ -10,7 +10,7 @@ import frc.robot.vision.*;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class TurretCalibrationCommand extends Command {
   private final TurretSubsystem Turret;
-  private final PoseSubsystem Pose;
+  private final VisionSubsystem Pose;
   public double hoodTunerNumber;
   public double flywheelTunerNumber;
   public long waitTimeNumber;
@@ -20,7 +20,7 @@ public class TurretCalibrationCommand extends Command {
   private static final String keyFlywheel = "Tuning/Flywheel RPS"; //current flywheel spd
   private static final String keyWaitTime = "Tuning/Wait Time (killiam william)";
 
-  public TurretCalibrationCommand(TurretSubsystem turret, PoseSubsystem pose) {
+  public TurretCalibrationCommand(TurretSubsystem turret, VisionSubsystem pose) {
     Turret = turret;
     Pose = pose;
   }
@@ -41,6 +41,7 @@ public class TurretCalibrationCommand extends Command {
     SmartDashboard.putNumber("Flywheel Speed", Turret.getFlywheelSpeed());
     SmartDashboard.putNumber("Feeder Speed: ", Turret.getFeederSpeed());
     SmartDashboard.putNumber("Distance from Hub: ", Pose.getDistToTarget(hubPosition));
+    SmartDashboard.putNumber("Turret Angle", Turret.getTurretAngle());
   }
   
 

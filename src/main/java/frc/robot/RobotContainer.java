@@ -35,7 +35,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.utils.AllianceHandler;
-import frc.robot.vision.PoseSubsystem;
+import frc.robot.vision.VisionSubsystem;
 
 public class RobotContainer {
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(4.0);
@@ -61,7 +61,7 @@ public class RobotContainer {
 
    
     private Alignment alignment = new Alignment();
-    private final PoseSubsystem poseSubsystem = new PoseSubsystem(drivetrain);
+    private final VisionSubsystem poseSubsystem = new VisionSubsystem(drivetrain);
     private final IntakeSubsystem intake = new IntakeSubsystem();
     private final TurretSubsystem turret = new TurretSubsystem();
     public Translation2d blueHubPosition = new Translation2d(4.625, 4.04);
@@ -78,28 +78,27 @@ public class RobotContainer {
 
     public RobotContainer() {
         turret.setDependencies(poseSubsystem, drivetrain);
-        //NamedCommands.registerCommand("AlignToTower", alignment.alignToTower());
         NamedCommands.registerCommand("RunIntakeCommand", Commands.startEnd(
-            () -> intake.intakeDownAndIntakeCommand(() -> drivetrain.getFieldRelativeSpeed()),
+            () -> intake.intakeOutAndIntakeCommand(() -> drivetrain.getFieldRelativeSpeed()),
             () -> intake.setIntakeVelocity(0)
         ));
-        NamedCommands.registerCommand("IntakeOn", intake.beginIntakeCommand(() -> drivetrain.getFieldRelativeSpeed()));
+        NamedCommands.registerCommand("IntakeOn", intake.intakeOutAndIntakeCommand(() -> drivetrain.getFieldRelativeSpeed()));
         NamedCommands.registerCommand("IntakeOff", intake.endIntakeCommand());
-        NamedCommands.registerCommand("IntakeDown", intake.intakeDown());
-        NamedCommands.registerCommand("AgitateIntake", intake.intakeAgitate());
-        //NamedCommands.registerCommand("AlignToTower", alignment.alignToTower());
-        NamedCommands.registerCommand("ShootAtHub", turret.getAutoAimAndShootCommand(poseSubsystem, drivetrain, () -> getHubPos(), nearTrench));
-
+        NamedCommands.registerCommand("Outtake", intake.intakeDownAndOuttakeCommand());
+        NamedCommands.registerCommand("IntakeDown", intake.intakeOpen());
+        NamedCommands.registerCommand("AgitateIntake", intake.slowlyAgitateAndSpinCommand());
+        NamedCommands.registerCommand("ShootAtHub", turret.getAutoAimAndShoot(poseSubsystem, drivetrain, () -> getHubPos(), () -> nearTrench));
         NamedCommands.registerCommand("StopShooting", turret.runOnce(() -> {
+            turret.isShooting = false;
             turret.stopMotors();
+            turret.setShooterVelocity(5.0);
             turret.stopFeeding();
             turret.setHoodPosition(-0.3);
         }));
 
         turretCalibrationCommand.ignoringDisable(true).schedule();
-        //CHANGE AUTO NAME HERE.
         autoChooser = AutoBuilder.buildAutoChooser("T1ShootNeutral");
-        SmartDashboard.putData("Auto Mode", autoChooser);
+        SmartDashboard.putData("(Pathplanner) Auto Mode", autoChooser);
 
         configureBindings();
         
@@ -131,15 +130,21 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        Trigger isStarving = new Trigger(() -> turret.getFlywheelStatorCurrent() < 50.0).and(() -> turret.isShooting)
-        .debounce(0.5);
+
+        Trigger isStarving = new Trigger(() -> turret.getFlywheelStatorCurrent() < 70.0)
+        .and(() -> turret.isShooting)
+        .and(() -> turret.isShooterAtSpeed(turret.m_shooterSpeedMap.get(
+            poseSubsystem.getCurrentPose().getTranslation().getDistance(getHubPos())
+        )))
+        .debounce(0.75);
+
 
         
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() -> {
-            boolean needSlow = turret.isShooting || intake.isIntaking;
+            boolean needSlow = turret.isShooting;
             double joystickX = needSlow ? MathUtil.clamp(-joystick.getLeftY(), -0.2, 0.2) : -joystick.getLeftY();
             double joystickY = needSlow ? MathUtil.clamp(-joystick.getLeftX(), -0.2, 0.2) : -joystick.getLeftX();
 
@@ -147,6 +152,7 @@ public class RobotContainer {
             double filteredX = xLimiter.calculate(joystickX);
             double filteredY = yLimiter.calculate(joystickY);
             double filteredRot = rotLimiter.calculate(-joystick.getRightX());*/
+
 
             return drive.withVelocityX(joystickX * MaxSpeed)// * speedMultiplier)
                     .withVelocityY(joystickY * MaxSpeed)// * speedMultiplier)
@@ -158,8 +164,7 @@ public class RobotContainer {
             turret.run(() -> {
                 if (turret.aimingToggle) {
                     turret.autoAim(poseSubsystem.getCurrentPose(), drivetrain.getFieldRelativeSpeed(), () -> getHubPos());
-                    turret.setShooterVelocity(5.0);
-                    //turret.setSpindexerVelocity(15);
+                    //turret.setShooterVelocity(5.0); //5.0
                     if ((poseSubsystem.getCurrentPose().getX() >= 3.5 && poseSubsystem.getCurrentPose().getX() <= 5.75) //||
                          //poseSubsystem.getCurrentPose().getX() >= 13.5 && poseSubsystem.getCurrentPose().getX() <= 11.25
                     ) {
@@ -169,8 +174,8 @@ public class RobotContainer {
                     }
                 } else {
                     turret.setHoodPosition(-0.3);
-                    turret.setShooterVelocity(5.0);
-                    //turret.setSpindexerVelocity(15);
+                    turret.stopMotors();
+                    //turret.setShooterVelocity(5.0); //5.0
                 }
             })
         );
@@ -206,41 +211,86 @@ public class RobotContainer {
         );
         */
 
-        /*joystick.R2().whileTrue(  `
-            turret.getAutoAimAndShootCommandCalibration(poseSubsystem, drivetrain, () -> getHubPos(), nearTrench, () -> turretCalibrationCommand.hoodTunerNumber, () -> turretCalibrationCommand.flywheelTunerNumber)
-        ); *///this is for calibration and tuning
+        /*joystick.R2().whileTrue(  
+            turret.getAutoAimAndShootCommandCalibration(poseSubsystem, drivetrain, () -> getHubPos(), nearTrench, () -> turretCalibrationCommand.hoodTunerNumber, () -> turretCalibrationCommand.flywheelTunerNumber))
+            .and(isStarving).whileTrue(
+            intake.intakeAgitate()
+            ); */
+            //this is for calibration and tuning
         
         joystick.R2().whileTrue(
-            turret.getAutoAimAndShootCommand(poseSubsystem, drivetrain, () -> getHubPos(), nearTrench)
-            //.alongWith(
-            //intake.slowlyAgitateAndSpinCommand()
-            //)
+            turret.getAutoAimAndShoot(poseSubsystem, drivetrain, () -> getHubPos(), () -> nearTrench)
         );
+
+        /*// reel in the intake ONLY while holding R2 AND the turret is starving
+        joystick.R2().and(isStarving).whileTrue(
+            intake.slowlyAgitateAndSpinCommand()
+        );*/
 
         joystick.R1().whileTrue(
-            turret.getAutoAimAndShootCommand(poseSubsystem, drivetrain, () -> getPassPos(), nearTrench)
+            turret.getAutoAimAndShoot(poseSubsystem, drivetrain, () -> getPassPos(), () -> nearTrench)
         );
 
-        /*joystick.R2().and(isStarving).onTrue(
+        /*joystick.L3().and(isStarving).onTrue(
             intake.slowlyAgitateAndSpinCommand()
         );*/
         
 
-        joystick.L2().and(joystick.L3().negate()).whileTrue(
-                intake.intakeDownAndIntakeCommand(() -> drivetrain.getFieldRelativeSpeed())
-        );
+        /*joystick.L2().and(joystick.L3().negate()).whileTrue(
+                intake.intakeOutAndIntakeCommand(() -> drivetrain.getFieldRelativeSpeed())
+        );*/
 
-        joystick.L3().toggleOnTrue(intake.intakeAgitate());
+        //joystick.square().whileTrue(intake.slowlyAgitateAndSpinCommand());
 
-        joystick.R3().whileTrue(
+        //joystick.square().toggleOnTrue(intake.intakeAgitate());
+
+        /*joystick.R3().whileTrue(
             intake.intakeDownAndOuttakeCommand()
-        );
+        );*/
 
-        joystick.povUp().onTrue(intake.intakeUp());
-        joystick.povDown().onTrue(intake.intakeDown());
+        /*joystick.povUp().whileTrue(
+            Commands.runEnd(
+                () -> intake.applyIntakeRackVelocity(3), 
+                () -> intake.applyIntakeRackVelocity(0))
+            );
+
+        joystick.povDown().whileTrue(
+            Commands.runEnd(
+                () -> {
+                    intake.applyIntakeRackVelocity(-3);
+                    intake.setIntakeVelocity(30);
+                },
+                () -> {
+                    intake.applyIntakeRackVelocity(0);
+                    intake.zeroIntakeRollerVoltage();
+                }
+            )
+        );
+        */
+
+        //joystick.povLeft().onTrue(intake.intakeClosed());
+
+        //joystick.povRight().onTrue(intake.intakeOpen());
+            
+        /*joystick.povLeft().whileTrue(Commands.runEnd(
+            () -> climb.setClimbSpeed(30),
+            () -> climb.setClimbSpeed(0)
+        ));
+
+        joystick.povRight().whileTrue(Commands.runEnd(
+            () -> climb.setClimbSpeed(-30),
+            () -> climb.setClimbSpeed(0)
+        ));
+        */
+
+        /*joystick.circle().onTrue(
+            climb.doDaFunnyClimb()
+        );
+        */
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
+
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */

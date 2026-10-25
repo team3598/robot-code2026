@@ -16,16 +16,16 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.vision.LimelightHelpers;
 
 
-public class PoseSubsystem extends SubsystemBase {
+public class VisionSubsystem extends SubsystemBase {
 
     public static double timeMS = Timer.getFPGATimestamp();
     final Field2d field = new Field2d();
-    private final List<String> limelightNames = List.of("limelight-fleft", "limelight-fright");//, "limelight-bright", "limelight-bleft");
+    private final List<String> limelightNames = List.of("limelight-fright", "limelight-one");//, "limelight-bright", "limelight-bleft");
     private int loopCounter = 0;
     private final CommandSwerveDrivetrain drivetrain;
     
-        public PoseSubsystem(CommandSwerveDrivetrain drivetrain) { //constructor
-            this.drivetrain = drivetrain;        
+        public VisionSubsystem(CommandSwerveDrivetrain drivetrain) { //constructor
+            this.drivetrain = drivetrain;
             SmartDashboard.putData(field); 
         }
         
@@ -50,7 +50,7 @@ public class PoseSubsystem extends SubsystemBase {
             if (mt2 == null || mt2.tagCount == 0 || mt2.avgTagDist > 4.0 || 
                 mt1 == null || mt1.tagCount == 0 || mt1.avgTagDist > 4.0)
                 {return;}
-        
+            
             LimelightHelpers.SetRobotOrientation(name, mt1.pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
         
             Vector<N3> stdDevs = calculateStdDev(mt1.avgTagDist);
@@ -76,6 +76,7 @@ public class PoseSubsystem extends SubsystemBase {
             String activeCamera = limelightNames.get(loopCounter % limelightNames.size()); //i do this because it is really taxing on the RoboRio to calculate everything and process two limelights at the same time. by doing this, it's switching back and forth between the two which should give me some less lag
             updateVision(activeCamera);
             //updateVision("limelight-fright");
+            //updateVision("limelight-one");
             //printCurrentPose();
 
             if (loopCounter % 2 == 0) {

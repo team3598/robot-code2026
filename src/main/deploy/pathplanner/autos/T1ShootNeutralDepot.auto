@@ -62,26 +62,21 @@
                 "data": {
                   "waitTime": 3.5
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeOn"
-                }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "T1ToDepot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopShooting"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "T1ToDepot"
+                }
+              }
+            ]
           }
         },
         {
@@ -128,13 +123,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeOn"
+                  "waitTime": 10.0
                 }
               }
             ]

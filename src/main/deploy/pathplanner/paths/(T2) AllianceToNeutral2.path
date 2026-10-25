@@ -8,27 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.806234021557336,
-        "y": 0.551380609725
+        "x": 4.932499676853717,
+        "y": 0.5205701872300119
       },
       "isLocked": false,
       "linkedName": "(T2) Position Start Shoot"
-    },
-    {
-      "anchor": {
-        "x": 5.085422222222222,
-        "y": 0.6690222222222224
-      },
-      "prevControl": {
-        "x": 4.5205351985133175,
-        "y": 0.7006873590153679
-      },
-      "nextControl": {
-        "x": 5.338829482825207,
-        "y": 0.654817301176798
-      },
-      "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
@@ -36,8 +20,8 @@
         "y": 0.7050296559905087
       },
       "prevControl": {
-        "x": 5.995700999760965,
-        "y": 0.7177107030262198
+        "x": 5.996401811135749,
+        "y": 0.7457853895860346
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.2753108348135014,
+      "waypointRelativePos": 0.65,
       "rotationDegrees": 180.0
     }
   ],
@@ -69,7 +53,7 @@
   "folder": "T2ShootNeutral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
