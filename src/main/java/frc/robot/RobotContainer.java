@@ -86,6 +86,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeOff", intake.endIntakeCommand());
         NamedCommands.registerCommand("Outtake", intake.intakeDownAndOuttakeCommand());
         NamedCommands.registerCommand("IntakeDown", intake.intakeOpen());
+        NamedCommands.registerCommand("IntakeClose", intake.intakeClosed());
         NamedCommands.registerCommand("AgitateIntake", intake.slowlyAgitateAndSpinCommand());
         NamedCommands.registerCommand("ShootAtHub", turret.getAutoAimAndShoot(poseSubsystem, drivetrain, () -> getHubPos(), () -> nearTrench));
         NamedCommands.registerCommand("StopShooting", turret.runOnce(() -> {
@@ -268,9 +269,9 @@ public class RobotContainer {
         );
         */
 
-        //joystick.povLeft().onTrue(intake.intakeClosed());
+        joystick.povLeft().onTrue(intake.intakeClosed());
 
-        //joystick.povRight().onTrue(intake.intakeOpen());
+        joystick.povRight().onTrue(intake.intakeOpen());
             
         /*joystick.povLeft().whileTrue(Commands.runEnd(
             () -> climb.setClimbSpeed(30),
