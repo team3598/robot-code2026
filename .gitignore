@@ -185,3 +185,6 @@ compile_commands.json
 
 # Eclipse generated file for annotation processors
 .factorypath
+
+# HP Sure Click metadata; preserve local provenance files, keep them out of Git
+**/~BROMIUM/
